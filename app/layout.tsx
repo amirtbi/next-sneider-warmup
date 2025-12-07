@@ -1,16 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Header from "@/components/header/header";
+import { Provider } from "@/components/ui/provider";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,11 +15,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html suppressHydrationWarning>
+      <body className="min-h-screen">
+        <Provider>
+          <Grid
+            templateRows="1fr"
+            templateColumns="200px 1fr"
+            height="100vh"
+            bg="white"
+            color="gray.900"
+          >
+            <GridItem>
+              <Box height={"100%"}>
+                <Header />
+              </Box>
+            </GridItem>
+            <GridItem p={6}>
+              <main>{children}</main>
+            </GridItem>
+          </Grid>
+        </Provider>
       </body>
     </html>
   );
