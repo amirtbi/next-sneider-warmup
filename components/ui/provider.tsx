@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode";
 import { SessionProvider } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 const config = defineConfig({
   theme: {
@@ -33,6 +34,14 @@ const config = defineConfig({
 const system = createSystem(defaultConfig, config);
 
 export function Provider({ children, ...props }: ColorModeProviderProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <span>loading...</span>;
+
   return (
     <SessionProvider>
       <ChakraProvider value={system}>

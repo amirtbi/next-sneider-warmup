@@ -1,10 +1,5 @@
-"use server";
-import { signIn, signOut } from "@/lib/auth";
-
-export const logIn = async () => {
-  return await signIn("github");
-};
-
-export const logOut = async () => {
-  return await signOut();
-};
+export { createComment } from "./createComment";
+export { createPost } from "./createPost";
+export { createTopic } from "./createTopic";
+export { logIn } from "./signIn";
+export { logOut } from "./signOut";

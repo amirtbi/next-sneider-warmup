@@ -16,22 +16,16 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning>
-      <body className="min-h-screen">
+      <body>
         <Provider>
-          <Grid
-            templateRows="1fr"
-            templateColumns="200px 1fr"
-            height="100vh"
-            bg="white"
-            color="gray.900"
-          >
+          <Grid height="100vh" templateRows="50px 1fr" bg="white">
             <GridItem>
-              <Box height={"100%"}>
+              <Box bgColor="red" position="fixed" width="100%" top="0">
                 <Header />
               </Box>
             </GridItem>
-            <GridItem p={6}>
-              <main>{children}</main>
+            <GridItem position={"relative"} top={"50px"} rowSpan={2} p={6}>
+              <Box>{children}</Box>
             </GridItem>
           </Grid>
         </Provider>

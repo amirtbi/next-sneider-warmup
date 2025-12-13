@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Button, Card } from "@chakra-ui/react";
+import { Button, Card } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 
@@ -9,10 +9,6 @@ const Profile = ({ session }: { session: Session | undefined }) => {
   return (
     <Card.Root>
       <Card.Body gap="2">
-        <Avatar.Root size="lg" shape="rounded">
-          <Avatar.Image src={user?.avatar} />
-          <Avatar.Fallback name={user?.name} />
-        </Avatar.Root>
         <Card.Title mt="2">{user?.name}</Card.Title>
         <Card.Description>{user?.email}</Card.Description>
       </Card.Body>
