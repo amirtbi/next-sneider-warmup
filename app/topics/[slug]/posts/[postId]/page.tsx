@@ -1,4 +1,7 @@
+import CommentList from "@/components/comments/commentList";
+import CreateCommentFormWrapper from "@/components/comments/createCommentFormWrapper";
 import PostShow from "@/components/posts/postShow/postShow";
+import { fetchCommentsByPostId } from "@/queries/comment";
 import { paths } from "@/utils/pathHelpers";
 import { Box, Flex, Link, Text } from "@chakra-ui/react";
 
@@ -20,6 +23,10 @@ const PostPage = async ({ params }: PostPageProps) => {
       </Link>
       <Flex direction="column">
         <PostShow postId={postId} />
+        <Box>
+          <CreateCommentFormWrapper postId={postId} text="create comment" />
+        </Box>
+        <CommentList postId={postId} />
       </Flex>
     </Box>
   );

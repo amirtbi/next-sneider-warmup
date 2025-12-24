@@ -1,5 +1,6 @@
 "use server";
 
+import { Comment } from "@/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { paths } from "@/utils/pathHelpers";
@@ -19,7 +20,7 @@ interface ICreateCommentFormState {
 }
 
 export const createComment = async (
-  { postId, parentId }: { postId: string; parentId: string },
+  { postId, parentId }: { postId: string; parentId?: string },
   formState: ICreateCommentFormState,
   formData: FormData
 ): Promise<ICreateCommentFormState> => {
@@ -41,8 +42,9 @@ export const createComment = async (
     };
   }
 
+  let comment: Comment;
   try {
-    await prisma.comment.create({
+    comment = await prisma.comment.create({
       data: {
         postId,
         parentId,
@@ -50,7 +52,6 @@ export const createComment = async (
         content: parsedForm.data.content,
       },
     });
-    return { success: true };
   } catch (e: unknown) {
     if (e instanceof Error) {
       return {
@@ -67,6 +68,20 @@ export const createComment = async (
     }
   }
 
-  //   revalidatePath(paths.postShowPath())
+  const topic = await prisma.topic.findFirst({
+    where: { posts: { some: { id: postId } } },
+  });
+
+  if (!topic) {
+    return {
+      errors: {
+        _form: ["Failed to revalidate topic"],
+      },
+    };
+  }
+
+  revalidatePath(paths.postShowPath(topic.slug, comment.postId));
   revalidatePath(paths.homePage());
+
+  return { success: true };
 };

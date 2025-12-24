@@ -24,8 +24,16 @@ export default function RootLayout({
                 <Header />
               </Box>
             </GridItem>
-            <GridItem position={"relative"} top={"50px"} rowSpan={2} p={6}>
-              <Box>{children}</Box>
+            <GridItem
+              overflow={"auto"}
+              position={"relative"}
+              top={"50px"}
+              rowSpan={2}
+              p={6}
+            >
+              <Box zIndex={1} overflow={"auto"}>
+                {children}
+              </Box>
             </GridItem>
           </Grid>
         </Provider>

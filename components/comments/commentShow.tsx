@@ -1,39 +1,54 @@
-import CreateCommenttForm from "./createCommentForm";
+import CreateCommentFormWrapper from "./createCommentFormWrapper";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { fetchCommentsByPostId } from "@/queries/comment";
 
-const CommentShow = ({ commentId }: { commentId: string }) => {
-  //   const comment = comments.find((c) => c.id === commentId);
+const CommentShow = async ({
+  commentId,
+  postId,
+}: {
+  commentId: string;
+  postId: string;
+}) => {
+  const comments = await fetchCommentsByPostId(postId);
 
-  //   if (!comment) return null;
+  const comment = comments.find((c) => c.id === commentId);
 
-  //   const children = comments.filter((c) => c.parentId === commentId);
+  if (!comment) return null;
 
-  //   const renderedChildren = children.map((child) => {
-  //     return (
-  //       <CommentShow key={child.id} commentId={child.id} comments={comments} />
-  //     );
-  //   });
+  const children = comments.filter((c) => c.parentId === commentId);
+  const renderedChildren = children.map((child) => {
+    return <CommentShow key={child.id} commentId={child.id} postId={postId} />;
+  });
 
   return (
-    <div className="p-4 border mt-2 mb-1">
-      <div className="flex gap-3">
-        <img
-          src={comment.user.image || ""}
-          alt="user image"
-          width={40}
-          height={40}
-          className="w-10 h-10 rounded-full"
-        />
-        <div className="flex-1 space-y-3">
-          <p className="text-sm font-medium text-gray-500">
-            {/* {comment.user.name} */}
-          </p>
-          {/* <p className="text-gray-900">{comment.content}</p> */}
-
-          {/* <CreateCommenttForm postId={comment.postId} parentId={comment.id} /> */}
-        </div>
-      </div>
-      {/* <div className="pl-4">{renderedChildren}</div> */}
-    </div>
+    <>
+      <Box m="4" borderWidth="1px" color="fg.disabled">
+        <Flex direction="column" gap="1" p="2">
+          <Flex gap="3" alignItems={"center"}>
+            <Image
+              boxSize="50px"
+              borderRadius="full"
+              fit="cover"
+              alt={comment.user.name || "user"}
+              src={comment.user.image || ""}
+            />
+            <Text fontSize="sm" color="gray.500">
+              {comment.user.name}
+            </Text>
+          </Flex>
+          <Flex flexDirection={"column"}>
+            <Text paddingTop={"5"} paddingLeft="10" color="gray.500">
+              {comment.content}
+            </Text>
+            <CreateCommentFormWrapper
+              postId={comment.postId}
+              parentId={comment.id}
+            />
+          </Flex>
+          <Box p="5">{renderedChildren}</Box>
+        </Flex>
+      </Box>
+    </>
   );
 };
 

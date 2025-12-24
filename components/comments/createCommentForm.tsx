@@ -2,21 +2,31 @@
 
 import { Field, Flex, Text, Textarea } from "@chakra-ui/react";
 import * as actions from "@/actions";
-import { useActionState, RefObject, useEffect, useRef, useState } from "react";
+import {
+  useActionState,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+  Children,
+} from "react";
 import { IWindowRef } from "@/hooks/useWindowRef";
 import FormButton from "@/components/formButton/formButton";
 import CustomButton from "../button/button";
+import React from "react";
 
 const CreateCommenttForm = ({
   windowRef,
   postId,
   parentId,
   startOpen,
+  triggerButtonComponent,
 }: {
   windowRef: RefObject<IWindowRef | undefined>;
   postId: string;
-  parentId: string;
+  parentId?: string;
   startOpen?: boolean;
+  triggerButtonComponent?: React.ReactElement;
 }) => {
   const [open, setOpen] = useState(startOpen);
   const ref = useRef<HTMLFormElement | null>(null);
@@ -38,6 +48,13 @@ const CreateCommenttForm = ({
       }
     }
   }, [startOpen, state, windowRef]);
+
+  const trigger = React.cloneElement(
+    triggerButtonComponent as React.ReactElement<any>,
+    {
+      onClick: () => setOpen((prev) => !prev),
+    }
+  );
 
   const form = (
     <form action={formAction} ref={ref}>
@@ -64,9 +81,7 @@ const CreateCommenttForm = ({
 
   return (
     <>
-      <CustomButton size="sm" variant="solid">
-        Reply
-      </CustomButton>
+      {trigger}
       {open && form}
     </>
   );

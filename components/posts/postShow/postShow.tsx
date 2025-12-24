@@ -1,9 +1,15 @@
+import CommentList from "@/components/comments/commentList";
+import CommentShow from "@/components/comments/commentShow";
 import prisma from "@/lib/prisma";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 
 const PostShow = async ({ postId }: { postId: string }) => {
-  const post = await prisma.post.findUnique({ where: { id: postId } });
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: { comments: true },
+  });
+  console.log("post", post);
 
   if (!post) {
     notFound();
@@ -24,6 +30,7 @@ const PostShow = async ({ postId }: { postId: string }) => {
         >
           {post.content}
         </Text>
+        <Box width="600px">{/* <CommentShow commentId={"1"} /> */}</Box>
       </Flex>
     </Box>
   );

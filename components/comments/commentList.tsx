@@ -1,24 +1,29 @@
+import { fetchCommentsByPostId } from "@/queries/comment";
 import CommentShow from "./commentShow";
+import { Heading } from "@chakra-ui/react";
 
-const CommentList = () => {
-  //   const topLevelComments = comments.filter(
-  //     (comment) => comment.parentId === null
-  //   );
+interface CommnetListProps {
+  postId: string;
+}
+const CommentList = async ({ postId }: CommnetListProps) => {
+  const comments = await fetchCommentsByPostId(postId);
 
-  //   const renderedComments = topLevelComments.map((comment) => {
-  //     return (
-  //       <CommentShow
-  //         key={comment.id}
-  //         commentId={comment.id}
-  //         comments={comments}
-  //       />
-  //     );
-  //   });
+  const topLevelComments = await comments.filter(
+    (comment) => comment.parentId === null
+  );
+
+  const renderedComments = topLevelComments.map((comment) => {
+    return (
+      <CommentShow key={comment.id} commentId={comment.id} postId={postId} />
+    );
+  });
 
   return (
     <div className="space-y-3">
-      {/* <h1 className="text-lg font-bold">All {comments.length} comments</h1> */}
-      {/* {renderedComments} */}
+      <Heading size="md" marginTop="10" color="black" fontWeight={"bold"}>
+        All {comments.length} comments
+      </Heading>
+      {renderedComments}
     </div>
   );
 };
